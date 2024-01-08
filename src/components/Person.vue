@@ -1,40 +1,29 @@
 <template>
   <div class="page">
-    姓：<input type="text" v-model="firstName"><br>
-    名：<input type="text" v-model="lastName"><br>
-    全名：<span>{{ fullName }}</span><br>
-    <button @click="changeFullName">改变全名：li-si</button>
+    <h2>情况一：监视【ref】定义的【基本类型】数据</h2>
+    <h2>当前求和值：{{ sum }}</h2>
+    <button @click="changeSum">点我sum+1</button>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { ref, watch } from 'vue'
 
 defineOptions({
   name: 'Person',
 })
 
-const firstName = ref('zhang')
-const lastName = ref('san')
+const sum = ref(0)
 
-// fullName 只读
-/* const fullName = computed(() => {
-  return firstName.value.slice(0, 1).toUpperCase() + firstName.value.slice(1) + '-' + lastName.value
-}) */
-
-// 可读可写
-const fullName = computed({
-  get() {
-    return firstName.value.slice(0, 1).toUpperCase() + firstName.value.slice(1) + '-' + lastName.value
-  },
-  set(v) {
-    const str = v.split('-')
-    firstName.value = str[0]
-    lastName.value = str[1]
-  },
+const unwatch = watch(sum, (nVal, oVal) => {
+  console.log(nVal, oVal)
+  if (nVal > 10) {
+    unwatch()
+  }
 })
 
-const changeFullName = () => {
-  fullName.value = 'li-si'
+const changeSum = () => {
+  sum.value += 1
 }
+
 </script>
