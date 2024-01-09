@@ -1,8 +1,10 @@
 <template>
   <Person ref="personRef" />
+  <button @click="getDom">按钮获取实例</button>
 </template>
 
 <script lang="ts">
+import { ref } from 'vue'
 import Person from '@/components/Person.vue'
 
 export default {
@@ -11,7 +13,15 @@ export default {
     Person,
   },
   setup() {
-    //
+    const personRef = ref()
+    const getDom = () => {
+      console.log(personRef.value)
+    }
+
+    return {
+      personRef,
+      getDom,
+    }
   },
 }
 </script>
