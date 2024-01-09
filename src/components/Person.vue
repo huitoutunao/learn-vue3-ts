@@ -1,22 +1,30 @@
 <template>
   <div class="page">
-    <ul>
-      <li v-for="item in list" :key="item.id">{{ item.name }}</li>
-    </ul>
+    <h2>当前求和为 {{ sum }}</h2>
+    <button @click="changeSum">点我+1</button>
+    <hr>
+    <img v-for="(image, index) in dogList" :key="index" :src="image" alt="img" />
+    <br>
+    <button @click="changeImg">获取图片</button>
   </div>
 </template>
 
 <script setup lang="ts">
-import type { Persons } from '@/types'
+import useSum from '@/hooks/useSum'
+import useDog from '@/hooks/useDog'
 
 defineOptions({
   name: 'Person',
 })
 
-// 限制类型 + 限制必要性 + 定义默认值
-withDefaults(defineProps<{
-  list?: Persons // 控制必要性
-}>(), {
-  list: () => [{id: '00', name: '牛奶', age: 19}], // 默认值
-})
+const {sum, changeSum} = useSum()
+const {dogList, changeImg} = useDog()
 </script>
+
+<style scoped>
+img {
+  width: 100px;
+  height: auto;
+  margin: 0 10px;
+}
+</style>
