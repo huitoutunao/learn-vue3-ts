@@ -5,7 +5,7 @@
 
 <script lang="ts">
 import { ref } from 'vue'
-import Person from '@/components/Person.vue'
+import Person from './components/Person.vue'
 
 export default {
   name: 'App',
