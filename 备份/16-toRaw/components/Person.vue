@@ -9,7 +9,7 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, toRaw } from 'vue'
+import { reactive, toRaw } from 'vue';
 
 defineOptions({
   name: 'Person',
