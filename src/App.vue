@@ -1,28 +1,59 @@
 <template>
   <div class="page">
-    <MyInput ref="myInputRef" v-model="input" placeholder="请输入">
-      <template #prefix>
-        <el-icon class="el-input__icon"><Search /></el-icon>
-      </template>
-      <template #suffix>
-        <el-icon class="el-input__icon"><Calendar /></el-icon>
-      </template>
-    </MyInput>
+    <MyTable v-loading="loading" :tableData="tableData">
+      <MyTableColumn :tableColumns="tableColumnsMapper" />
+    </MyTable>
   </div>
 </template>
 
 <script setup lang="ts">
-import { nextTick, onMounted, ref } from 'vue'
-import { Calendar, Search } from '@element-plus/icons-vue'
-import MyInput from '@/components/MyInput.vue'
+import { onMounted, ref } from 'vue'
+import MyTable from '@/components/MyTable.vue'
+import MyTableColumn from '@/components/MyTableColumn.vue'
 
-const input = ref('')
-const myInputRef = ref()
+const loading = ref(false)
+const tableData = ref([])
+const tableColumnsMapper = {
+  a: {
+    label: '列a',
+    width: '300',
+  },
+  b: '列b',
+  c: '列c',
+  d: '列d',
+  e: '列e',
+  f: '列f',
+  g: '列g',
+}
+
+const getData = () => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      const res = {
+        data: new Array(9).fill({
+          a: 'a111',
+          b: 'b111',
+          c: 'c111',
+          d: 'd111',
+          e: 'e111',
+          f: 'f111',
+          g: 'g111',
+        })
+      }
+
+      return resolve(res)
+    }, 1500)
+  })
+}
 
 onMounted(() => {
-  nextTick(() => {
-    myInputRef.value.inputRef.focus()
-  })
+  loading.value = true
+  getData()
+    .then((res: any) => {
+      tableData.value = res.data
+    }).finally(() => {
+      loading.value = false
+    })
 })
 </script>
 
