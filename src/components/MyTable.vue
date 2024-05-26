@@ -7,10 +7,6 @@
 </template>
 
 <script setup lang="ts">
-// type Mapper2 = {
-//   [key: string]: string | object
-// }
-
 const props = defineProps<{
   tableData: Array<any>
 }>()
