@@ -1,6 +1,6 @@
 <template>
   <el-table :data="tableData" style="width: 100%">
-    <template v-for="(slot, slotName) in $slots" #[slotName]>
+    <template v-for="slotName in Object.keys($slots)" #[slotName]>
       <slot :name="slotName"></slot>
     </template>
   </el-table>

@@ -3,30 +3,43 @@
   <!-- https://juejin.cn/post/7301569815827103755 -->
   <!-- https://github.com/HalseySpicy/Geeker-Admin/blob/master/src/components/ProTable/index.vue -->
   <!-- 掘金手册，函数式组件写法 render -->
-  <el-table-column v-for="column in newTableColumns" v-bind="(column as object)" />
+
+  <!-- pnpm管理文章 https://juejin.cn/post/7357546247848198182?utm_source=gold_browser_extension -->
+  <!-- pnpm monorepo 入门视频 https://www.bilibili.com/video/BV1e84y1B7s3/?spm_id_from=333.337.search-card.all.click  -->
+  <el-table-column v-for="column in newTableColumns" v-bind="column">
+    <template v-if="column?.defaultSlot">
+      <TableRender />
+    </template>
+  </el-table-column>
 </template>
 
 <script setup lang="ts">
 import { onBeforeUpdate, onMounted, ref } from 'vue'
+import TableRender from './table-render'
 
-type Mapper<T> = {
-  [P in keyof T as string]?: string | object
-}
-// type Mapper2 = {
-//   [key: string]: string | object
+// type Mapper<T> = {
+//   [P in keyof T as string]?: string | object
 // }
+type Mapper2 = {
+  [key: string]: any
+}
 
 const props = defineProps<{
-  tableColumns: Mapper<any>
+  tableColumns: Mapper2
 }>()
 
-const newTableColumns = ref({})
+export interface ItemTableColumns<T> {
+  defaultSlot?: any;
+  [key: string]: T | ItemTableColumns<T>;
+}
+type ItemTableColumnsObject = ItemTableColumns<any>
+
+const newTableColumns = ref<ItemTableColumnsObject>({})
 const handleNewTableColumns = () => {
   newTableColumns.value = { ...props.tableColumns }
   const rawAttrs = props.tableColumns
   for (const k in rawAttrs) {
     const rawVal = rawAttrs[k]
-
     if (typeof rawVal === 'string') {
       Reflect.set(newTableColumns.value, k, {
         key: k,
@@ -51,7 +64,6 @@ const handleNewTableColumns = () => {
     }
   }
 }
-
 onMounted(handleNewTableColumns)
 onBeforeUpdate(handleNewTableColumns)
 </script>
