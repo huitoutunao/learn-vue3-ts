@@ -4,12 +4,14 @@
     <Demo :msg="msg" />
     <el-button @click="changeMsg">按钮</el-button>
     <Counter v-model:count="count" />
+    <CounterBus />
   </div>
 </template>
 
 <script setup lang="tsx">
 import { defineComponent, ref, useCssModule } from 'vue'
 import Counter from '@/components/counter.vue'
+import CounterBus from '@/components/counterBus.vue'
 
 const styles = useCssModule()
 const msg = ref('hello world')
