@@ -1,5 +1,6 @@
 <template>
   <div class="page">
+    <SearchForm :columns="searchColumns" :search-param="searchParam" />
     <BasicTable
       :columns="columns"
       :init-param="initParam"
@@ -10,9 +11,11 @@
       style="width: 100%"
     >
       <template #tableHeader="scope">
-        <el-button type="primary" @click="onAdd(scope)">新增</el-button>
-        <el-button type="success">下载</el-button>
-        <el-button type="default">批量导入</el-button>
+        <el-button-group>
+          <el-button type="primary" :icon="Plus" @click="onAdd(scope)">新增</el-button>
+          <el-button type="success" :icon="Document">下载模板</el-button>
+          <el-button type="default" :icon="Upload">导入</el-button>
+        </el-button-group>
       </template>
     </BasicTable>
     <!-- <BasicTable :data="tableData" :columns="columns" stripe style="width: 100%" /> -->
@@ -30,16 +33,17 @@
 </template>
 
 <script setup>
-import { h } from 'vue'
-import { ElButton, ElMessage } from 'element-plus'
+import { h, ref, reactive } from 'vue'
+import { ElButton, ElDatePicker, ElMessage } from 'element-plus'
+import { Plus, Document, Upload } from '@element-plus/icons-vue'
 import BasicTable from '@/components/BasicTable.vue'
+import SearchForm from '@/components/SearchForm.vue'
 
 defineOptions({
   name: 'BasicTableDemo',
 })
 
 const apiGetOilDepotList = () => {}
-
 const initParam = {
   oilDepotName: '',
 }
@@ -63,12 +67,10 @@ const dataCallback = (res) => {
 
   return resData
 }
-
 /* 新增 */
 const onAdd = (scope) => {
   console.log(scope)
 }
-
 /* 列设置 */
 const columns = [
   {
@@ -103,6 +105,123 @@ const columns = [
     }, */
   },
 ]
+
+const enumMap = ref(new Map())
+const searchColumns = ref([
+  {
+    key: 'shopNo',
+    formItem: {
+      label: '商铺号',
+      prop: 'shopNo',
+      el: 'input',
+      elProps: {
+        placeholder: '请输入',
+      },
+    },
+  },
+  {
+    key: 'orderNo',
+    formItem: {
+      el: 'input',
+      label: '订单号',
+      prop: 'orderNo',
+      elProps: {
+        placeholder: '请输入',
+      },
+    },
+  },
+  {
+    key: 'goodsName',
+    formItem: {
+      el: 'input',
+      label: '商品名称',
+      prop: 'goodsName',
+      elProps: {
+        placeholder: '请输入',
+      },
+    },
+  },
+  {
+    key: 'goodsDate',
+    formItem: {
+      el: 'date-picker',
+      label: '商品过期',
+      prop: 'goodsDate',
+      elProps: {
+        type: 'date',
+        valueFormat: 'YYYY-MM-DD',
+        style: { width: '100%' },
+      },
+    },
+  },
+  {
+    key: 'goodsType',
+    fieldNames: { label: 'typeLabel', value: 'typeValue' },
+    formItem: {
+      el: 'select',
+      label: '商品种类',
+      prop: 'goodsType',
+      elProps: {
+        placeholder: '请选择',
+      },
+    },
+  },
+  {
+    key: 'orderType',
+    formItem: {
+      el: 'select',
+      label: '订单类型',
+      prop: 'orderType',
+      elProps: {
+        placeholder: '请选择',
+      },
+    },
+  },
+  {
+    key: 'goodsDateTimerange',
+    formItem: {
+      label: '商品周期',
+      prop: 'goodsDateTimerange',
+      render: ({ searchParam }) => {
+        return h(ElDatePicker, {
+          modelValue: searchParam.goodsDateTimerange,
+          type: 'datetimerange',
+          valueFormat: 'YYYY-MM-DD HH:mm:ss',
+          rangeSeparator: '至',
+          startPlaceholder: '开始日期',
+          endPlaceholder: '结束日期',
+          style: { width: '100%' },
+          onChange: (val) => {
+            console.log('modelValue已双向绑定')
+            console.log('查询参数', searchParam)
+            console.log('日期范围变化', val)
+          },
+        })
+      },
+    },
+  },
+])
+const searchParam = reactive({
+  shopNo: '',
+  orderNo: '',
+  goodsName: '',
+  goodsDate: '',
+  goodsType: '',
+  orderType: '',
+  goodsDateTimerange: '',
+})
+
+setTimeout(() => {
+  enumMap.value.set('goodsType', [
+    { typeLabel: '种类1', typeValue: 't1' },
+    { typeLabel: '种类2', typeValue: 't2' },
+  ])
+  enumMap.value.set('orderType', [
+    { label: '类型1', value: 'o1' },
+    { label: '类型2', value: 'o2' },
+  ])
+}, 2000)
+provide('enumMap', enumMap)
 </script>
 
 <style lang="scss" scoped></style>
