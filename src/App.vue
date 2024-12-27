@@ -33,7 +33,7 @@
 </template>
 
 <script setup>
-import { h, ref, reactive } from 'vue'
+import { h, provide, ref, reactive } from 'vue'
 import { ElButton, ElDatePicker, ElMessage } from 'element-plus'
 import { Plus, Document, Upload } from '@element-plus/icons-vue'
 import BasicTable from '@/components/BasicTable.vue'
@@ -184,7 +184,8 @@ const searchColumns = ref([
       prop: 'goodsDateTimerange',
       render: ({ searchParam }) => {
         return h(ElDatePicker, {
-          modelValue: searchParam.goodsDateTimerange,
+          modelValue: searchParam.goodsDateTimerange, // v-model 的 prop
+          'onUpdate:modelValue': (val) => { searchParam.goodsDateTimerange = val }, // v-model 的事件监听
           type: 'datetimerange',
           valueFormat: 'YYYY-MM-DD HH:mm:ss',
           rangeSeparator: '至',
@@ -192,7 +193,6 @@ const searchColumns = ref([
           endPlaceholder: '结束日期',
           style: { width: '100%' },
           onChange: (val) => {
-            console.log('modelValue已双向绑定')
             console.log('查询参数', searchParam)
             console.log('日期范围变化', val)
           },
