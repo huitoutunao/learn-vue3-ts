@@ -23,7 +23,8 @@
 </template>
 
 <script setup>
-import { h, ref, nextTick } from 'vue'
+import axios from 'axios'
+import { h, onMounted, ref, nextTick } from 'vue'
 import { ElButton, ElDatePicker, ElMessage } from 'element-plus'
 import { Plus, Document, Upload } from '@element-plus/icons-vue'
 import BasicTable from '@/components/BasicTable.vue'
@@ -33,9 +34,7 @@ defineOptions({
 })
 
 const apiGetOilDepotList = () => {}
-const initParam = {
-  oilDepotName: '',
-}
+const initParam = {}
 const requestError = (err) => {
   console.log('@@err', err)
 }
@@ -264,6 +263,10 @@ nextTick(() => {
       },
     ])
   }, 2000)
+})
+
+onMounted(() => {
+  axios.get('/mock/demo').then((res) => console.log(res))
 })
 </script>
 

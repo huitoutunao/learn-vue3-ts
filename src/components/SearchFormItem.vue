@@ -53,7 +53,7 @@ const fieldNames = computed(() => {
 })
 
 /* 接收 enumMap (el 为 select-v2 需单独处理 enumData) */
-const enumMap = inject('enumMap', ref(new Map()))
+let enumMap = inject('enumMap', ref(new Map()))
 const columnEnum = computed(() => {
   const enumData = enumMap.value.get(props.column.formItem.prop)
   if (!enumData) return []
