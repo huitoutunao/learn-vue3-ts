@@ -53,14 +53,14 @@ const fieldNames = computed(() => {
 })
 
 /* 接收 enumMap (el 为 select-v2 需单独处理 enumData) */
-let enumMap = inject('enumMap', ref(new Map()))
+const enumMap = inject('enumMap', ref(new Map()))
 const columnEnum = computed(() => {
-  const enumData = enumMap.value.get(props.column.formItem.prop)
+  let enumData = enumMap.value.get(props.column.formItem.prop)
   if (!enumData) return []
   if (props.column.formItem?.el === 'select-v2' && props.column.fieldNames) {
     enumData = enumData.map((item) => {
-      return { ...item, label: item[fieldNames.value.label], value: item[fieldNames.value.value] };
-    });
+      return { ...item, label: item[fieldNames.value.label], value: item[fieldNames.value.value] }
+    })
   }
   return enumData
 })
