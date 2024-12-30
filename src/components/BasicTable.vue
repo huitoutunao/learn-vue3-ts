@@ -97,6 +97,8 @@ const props = defineProps({
   isShowSearch: { type: Boolean, default: true },
   /* 搜索表单项 */
   searchColumns: { type: Array, default: () => [] },
+  /* 是否显示表格加载动画 */
+  isShowTableLoading: { type: Boolean, default: true },
   /* 表格数据 */
   data: { type: [Array, null], default: null },
   /* 表格列 */
@@ -141,6 +143,7 @@ const { selectionChange, selectedList, selectedListIds, isSelected } = useSelect
 const { tableData, pageable, getTableList, searchParam, searchInitParam, handleSizeChange, handleCurrentChange, search, reset } = useTable(
   props.requestApi,
   props.initParam,
+  props.isShowTableLoading,
   props.pageParamKeyMap,
   props.pagination,
   props.dataCallback,
