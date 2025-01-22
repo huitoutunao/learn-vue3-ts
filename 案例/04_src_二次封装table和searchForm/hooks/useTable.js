@@ -4,6 +4,7 @@ import { computed, reactive, toRefs } from 'vue'
  * @description table 页面操作方法封装
  * @param {Function} api 获取表格数据 api 方法 (必传)
  * @param {Object} initParam 获取数据初始化参数 (非必传，默认为{})
+ * @param {Boolean} isShowTableLoading 是否显示加载动画 (非必传，默认为true)
  * @param {Object} pageParamKeyMap 获取分页参数键名映射 (非必传，默认为{pageNum:page, pageSize:rows})
  * @param {Boolean} isPageable 是否有分页 (非必传，默认为true)
  * @param {Function} dataCallBack 对后台返回的数据进行处理的方法 (非必传)
@@ -12,12 +13,15 @@ import { computed, reactive, toRefs } from 'vue'
 const useTable = (
   api,
   initParam = {},
+  isShowTableLoading = true,
   pageParamKeyMap = {},
   isPageable = true,
   dataCallBack = null,
   requestError = null
 ) => {
   const state = reactive({
+    /* 是否显示loading */
+    tableLoading: false,
     /* 表格数据 */
     tableData: [],
     /* 分页数据 */
@@ -63,6 +67,7 @@ const useTable = (
   const getTableList = async () => {
     if (!api) return
     try {
+      if (isShowTableLoading) state.tableLoading = true
       Object.assign(state.totalParam, initParam, isPageable ? pageParam.value : {})
       let data = await api({ ...state.searchInitParam, ...state.totalParam })
       console.log('getTableList data: ', data)
@@ -76,6 +81,8 @@ const useTable = (
       }
     } catch (err) {
       if (requestError) requestError(err)
+    } finally {
+      state.tableLoading = false
     }
   }
 
