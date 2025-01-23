@@ -35,8 +35,8 @@ const $http = new AxiosPlus({
   abortRepetitiveRequest: true,
   retryConfig: {
     count: 3,
-    waitTime: 500
-  }
+    waitTime: 500,
+  },
 })
 
 export default $http
